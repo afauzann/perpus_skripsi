@@ -18,3 +18,14 @@ export const AddUser = gql`
     }
   }
 `;
+
+export const GetUser = gql`
+ query GetUser($id: String!) {
+  users_by_pk(id: $id) {
+    id
+    nama
+    role
+  }
+}
+`
+

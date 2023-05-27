@@ -4,7 +4,6 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 import DashboardAdmin from "./DashboardAdmin";
 import ModalCreateBuku from "../../components/Admin/ModalCreateBuku";
 import BukuList from "../../components/Admin/BukuList";
-import SearchBuku from "../../components/Admin/SearchBuku";
 
 export default function BukuPage() {
     const [modalCreateTrigger, setModalCreateTrigger] = useState(false);
