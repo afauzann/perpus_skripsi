@@ -9,6 +9,7 @@ export default function useUser() {
   const [user, loading] = useAuthState(auth);
   const [role, setRole] = useState("");
   const [name, setName] = useState("");
+  const [uid, setUid] = useState("");
   const [loadingData, setLoadingData] = useState(true);
 
   const fetchRole = async () => {
@@ -22,6 +23,7 @@ export default function useUser() {
         const data = doc.docs[0].data();
         setRole(data.role);
         setName(data.name);
+        setUid(data.uid)
         setLoadingData(false);
       } catch (err) {
         console.error(err);
@@ -43,5 +45,5 @@ export default function useUser() {
     }
   }, [user]);
 
-  return { role, loadingData, name };
+  return { role, loadingData, name, uid };
 }

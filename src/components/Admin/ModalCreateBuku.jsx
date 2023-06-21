@@ -12,6 +12,7 @@ import { PulseLoader } from "react-spinners";
 const ModalCreateBuku = ({ handleModalCreateTrigger }) => {
 	const bukuData = {
 		nama_buku: "",
+		stok: "",
         gambar_buku: null,
 	};
 
@@ -25,7 +26,6 @@ const ModalCreateBuku = ({ handleModalCreateTrigger }) => {
 					Swal.fire({
 						icon: "error",
 						title: "Gagal menambahkan data",
-						text: "buku tidak boleh sama",
 						showConfirmButton: false,
 						timer: 2000,
 						background: "#fefefe",
@@ -83,6 +83,7 @@ const ModalCreateBuku = ({ handleModalCreateTrigger }) => {
                     getDownloadURL(storageRef).then((url) => {
                       const newData = {
                         nama_buku: data.nama_buku,
+						stok: data.stok,
                         gambar_buku: url
                       };
                       tambahMataPelajaran(newData);
@@ -129,6 +130,22 @@ const ModalCreateBuku = ({ handleModalCreateTrigger }) => {
 										placeholder="Masukkan nama buku"
 										required
 										value={data.nama_buku}
+										onChange={handleChange}
+									/>
+								</div>
+								<div>
+									<label htmlFor="stok" className="mb-2 block text-sm font-medium text-gray-900">
+										<span className="block after:ml-1 after:text-red-500 after:content-['*']">Stok Buku</span>
+									</label>
+									<input
+										type="number"
+										name="stok"
+										id="stok"
+										className="block w-full rounded-lg border border-gray-300 p-2.5 text-gray-900 placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+										placeholder="Masukkan stok buku"
+										min={0}
+										required
+										value={data.stok}
 										onChange={handleChange}
 									/>
 								</div>

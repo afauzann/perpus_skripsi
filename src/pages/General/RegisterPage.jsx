@@ -148,7 +148,7 @@ const RegisterPage = () => {
 										type="email"
 										name="email"
 										id="email"
-										placeholder="Masukkan nama belakang"
+										placeholder="Masukkan email"
 										className="block w-full rounded-lg border border-gray-300 p-2.5 text-gray-900 placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
 										required
 										value={values.email}

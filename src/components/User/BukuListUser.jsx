@@ -4,9 +4,9 @@ import { useSubscription } from "@apollo/client";
 import { SubscriptionBuku } from "../../graphql/typeDefs/buku.graphql";
 import { PulseLoader } from "react-spinners";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import BukuListItem from "./BukuListItem";
+import BukuListItemUser from "./BukuListItemUser";
 
-const BukuList = () => {
+const BukuListUser = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
@@ -92,7 +92,7 @@ const BukuList = () => {
               </tr>
             </thead>
             {data?.buku_aggregate.nodes.map((item, i) => {
-              return <BukuListItem key={item.id} data={{ ...item, no: i + 1 }} />;
+              return <BukuListItemUser key={item.id} data={{ ...item, no: i + 1 }} />;
             })}
           </table>
         </div>
@@ -106,4 +106,4 @@ const BukuList = () => {
   );
 };
 
-export default BukuList;
+export default BukuListUser;

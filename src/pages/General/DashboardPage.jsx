@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 // import imgAdmin from "../../assets/img/png/img-admin.png";
@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 // import OverviewData from "../../components/Admin/OverviewData";
 import { PulseLoader } from "react-spinners";
 import useUser from "../../hooks/useUser";
-import DashboardAdmin from "../Admin/DashboardAdmin";
+import OverviewData from "../../components/Admin/OverviewData";
 // import { Helmet } from "react-helmet";
 
 const DashboardPage = () => {
@@ -42,7 +42,7 @@ const DashboardPage = () => {
 							</div>
 						</div>
 					</div>
-					<DashboardAdmin />
+					<OverviewData />
 				</div>
 			)}
 

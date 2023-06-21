@@ -9,7 +9,7 @@ import { sidebarToggler } from "../../stores/features/sidebarSlice";
 import useUser from "../../hooks/useUser";
 import { isAuthorizedAdmin, isAuthorizedSiswa } from "../../mocks/isAuthorized";
 
-const Drawer = () => {
+const Drawer = ({uid}) => {
 	const sidebarToggle = useSelector((state) => state.sidebar);
 	const dispatch = useDispatch();
 
@@ -66,7 +66,7 @@ const Drawer = () => {
 									return (
 										<li key={idx}>
 											<NavLink
-												to={item.path}
+												to={item.path.replace(":uid", uid)}
 												className={({ isActive }) =>
 													isActive
 														? "flex items-center rounded-lg bg-indigo-100 p-2 text-base font-semibold text-indigo-700 hover:bg-indigo-200"
@@ -87,7 +87,7 @@ const Drawer = () => {
 									return (
 										<li key={idx}>
 											<NavLink
-												to={item.path}
+												to={item.path.replace(":uid", uid)}
 												className={({ isActive }) =>
 													isActive
 														? "flex items-center rounded-lg bg-indigo-100 p-2 text-base font-semibold text-indigo-700 hover:bg-indigo-200"

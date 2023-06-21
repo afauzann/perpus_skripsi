@@ -5,7 +5,9 @@ const Auth = {
     if (Cookies.get("token")) return true;
     return null;
   },
-
+  getUidFromCookies: () => {
+    return Cookies.get("uid") || null;
+  },
   logout() {
     Cookies.remove("token");
     Cookies.remove("rf");

@@ -1,23 +1,24 @@
 import React, { useState } from "react";
 import { useSubscription } from "@apollo/client";
 
-import { SubscriptionBuku } from "../../graphql/typeDefs/buku.graphql";
 import { PulseLoader } from "react-spinners";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import BukuListItem from "./BukuListItem";
+import { SubcriptionPinjam } from "../../graphql/typeDefs/pinjam.graphlql";
+import PeminjamanListItem from "./PeminjamanListItem";
 
-const BukuList = () => {
+const PeminjamanList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
 
-  const { data, loading } = useSubscription(SubscriptionBuku, {
+  const { data, loading } = useSubscription(SubcriptionPinjam, {
     variables: {
       searchTerm: `%${searchTerm}%`,
       limit,
       offset: (page - 1) * limit,
     },
   });
+
 
   const handleSearch = () => {
     setPage(1);
@@ -39,7 +40,7 @@ const BukuList = () => {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Cari buku..."
+            placeholder="Cari User..."
             className="py-2 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-auto"
           />
           <button
@@ -60,7 +61,7 @@ const BukuList = () => {
           </button>
           <button
             onClick={handleNextPage}
-            disabled={data?.buku_aggregate.nodes.length < limit}
+            disabled={data?.peminjaman_aggregate.nodes.length < limit}
             className="py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
           >
             Next
@@ -72,7 +73,7 @@ const BukuList = () => {
         <div className="my-0 mx-auto flex items-center justify-center pt-5">
           <PulseLoader size={10} color="#2563eb" />
         </div>
-      ) : data?.buku_aggregate.nodes.length > 0 ? (
+      ) : data?.peminjaman_aggregate.nodes.length > 0 ? (
         <div className="relative w-full overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
           <table className="whitespace-no-wrap w-full text-left text-sm text-gray-500">
             <thead>
@@ -87,23 +88,38 @@ const BukuList = () => {
                   Nama Buku
                 </th>
                 <th scope="col" className="py-3 px-6">
+                  Nama User
+                </th>
+                <th scope="col" className="py-3 px-6">
+                  Tanggal Peminjaman
+                </th>
+                <th scope="col" className="py-3 px-6">
+                  Tanggal Pengembalian
+                </th>
+                <th scope="col" className="py-3 px-6">
+                  Status
+                </th>
+                <th scope="col" className="py-3 px-6">
+                  Denda
+                </th>
+                <th scope="col" className="py-3 px-6">
                   Aksi
                 </th>
               </tr>
             </thead>
-            {data?.buku_aggregate.nodes.map((item, i) => {
-              return <BukuListItem key={item.id} data={{ ...item, no: i + 1 }} />;
+            {data?.peminjaman_aggregate.nodes.map((item, i) => {
+              return <PeminjamanListItem key={item.id} data={{ ...item, no: i + 1 }} />;
             })}
           </table>
         </div>
       ) : (
         <div className="flex flex-wrap items-center justify-center py-4 px-6 text-xs font-semibold leading-7 text-gray-700">
           <InformationCircleIcon className="mr-3 h-6 w-6 text-gray-600" />
-          Data buku kosong
+          Data user kosong
         </div>
       )}
     </div>
   );
 };
 
-export default BukuList;
+export default PeminjamanList;

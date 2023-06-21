@@ -10,11 +10,12 @@ import ModalEditBuku from "./ModalEditBuku";
 import { storage } from "../../configs/firebase";
 
 const BukuListItem = ({ data }) => {
-  const { id, no, nama_buku, gambar_buku } = data;
+  const { id, no, nama_buku, gambar_buku, stok } = data;
 
   const baseUpdate = {
     nama_buku: nama_buku,
     gambar_buku: gambar_buku,
+    stok: stok,
   };
 
   const [modalEditTrigger, setModalEditTrigger] = useState(false);
@@ -162,6 +163,9 @@ const BukuListItem = ({ data }) => {
   return (
     <tbody>
       <tr className="border-b bg-white hover:bg-gray-50">
+      <th scope="row" className="whitespace-nowrap py-4 px-6 font-semibold text-gray-900" style={{textAlign: "center"}}>
+          {no}
+        </th>
         <th scope="row" className="whitespace-nowrap py-4 px-6 font-semibold text-gray-900">
           <img src={gambar_buku} alt="Gambar Buku" />
         </th>

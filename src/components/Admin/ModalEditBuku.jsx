@@ -57,9 +57,25 @@ const ModalEditBuku = ({ handleModalEditTrigger, update, handleChange, handleUpd
 										name="nama_buku"
 										id="nama_buku"
 										className="block w-full rounded-lg border border-gray-300 p-2.5 text-gray-900 placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-										placeholder="Masukkan nama pelajaran"
+										placeholder="Masukkan nama buku"
 										required
 										value={update.nama_buku}
+										onChange={handleChange}
+									/>
+								</div>
+								<div>
+									<label htmlFor="stok" className="mb-2 block text-sm font-medium text-gray-900">
+										<span className="block after:ml-1 after:text-red-500 after:content-['*']">Stok</span>
+									</label>
+									<input
+										type="number"
+										name="stok"
+										id="stok"
+										className="block w-full rounded-lg border border-gray-300 p-2.5 text-gray-900 placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+										placeholder="Masukkan stok"
+										required
+										min={0}
+										value={update.stok}
 										onChange={handleChange}
 									/>
 								</div>

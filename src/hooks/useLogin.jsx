@@ -14,14 +14,14 @@ const Alert = MySwal.mixin({
   },
 });
 
-export default function Login() {
+export default function useLogin() {
   const login = async (email, password) => {
     await signInWithEmailAndPassword(auth, email, password);
     Cookies.set("token", auth.currentUser.accessToken);
     Cookies.set("rf", auth.currentUser.refreshToken);
 
-    // Simpan uid dalam cookies saat login
-    Cookies.set("uid", auth.currentUser.uid);
+    const uid = auth.currentUser.uid;
+    Cookies.set("uid", uid);
 
     setTimeout(
       () =>
@@ -34,6 +34,7 @@ export default function Login() {
         }),
       2000
     );
+    return uid;
   };
   return login;
 }
