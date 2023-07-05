@@ -62,10 +62,10 @@ const ModalPinjamBuku = ({ handleModalPinjamTrigger, namaBuku, stok, id }) => {
             return;
           }
           
-        if (jumlahPinjam > stok) {
+        if (jumlahPinjam > 1) {
           Swal.fire({
             title: "Jumlah Pinjam Tidak Valid",
-            text: "Jumlah pinjam melebihi stok buku yang tersedia.",
+            text: "Jumlah pinjam hanya boleh 1.",
             icon: "error",
           });
           return;
@@ -285,7 +285,7 @@ const ModalPinjamBuku = ({ handleModalPinjamTrigger, namaBuku, stok, id }) => {
                       placeholder="Masukkan jumlah buku yang ingin dipinjam"
                       value={jumlahPinjam}
                       min={1}
-                      max={stok}
+                      max={1}
                       onChange={(e) => setJumlahPinjam(e.target.value)}
                     />
                   </div>

@@ -1,13 +1,34 @@
 import { gql } from "@apollo/client";
 
+// export const AddBuku = gql`
+//   mutation AddBuku($gambar_buku: String, $nama_buku: String, $stok: numeric) {
+//     insert_buku_one(
+//       object: { gambar_buku: $gambar_buku, nama_buku: $nama_buku, stok: $stok }
+//       on_conflict: { constraint: buku_pkey }
+//     ) {
+//       nama_buku
+//       stok
+//     }
+//   }
+// `;
+
 export const AddBuku = gql`
-  mutation AddBuku($gambar_buku: String, $nama_buku: String, $stok: numeric) {
+  mutation AddBuku($gambar_buku: String, $nama_buku: String, $stok: numeric, $id_kategori: Int) {
     insert_buku_one(
-      object: { gambar_buku: $gambar_buku, nama_buku: $nama_buku, stok: $stok }
+      object: {
+        gambar_buku: $gambar_buku
+        nama_buku: $nama_buku
+        stok: $stok
+        id_kategori: $id_kategori
+      }
       on_conflict: { constraint: buku_pkey }
     ) {
       nama_buku
       stok
+      buku_kategori {
+        id
+        nama_kategori
+      }
     }
   }
 `;

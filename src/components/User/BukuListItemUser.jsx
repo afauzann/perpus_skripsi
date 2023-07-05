@@ -7,17 +7,28 @@ import { storage } from "../../configs/firebase";
 import Cookies from "js-cookie";
 import { Button } from "flowbite-react";
 import ModalPinjamBuku from "./ModalPinjamBuku";
+import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import ModalInfoBuku from "../Admin/ModalInfoBuku";
 
 const BukuListItemUser = ({ data }) => {
   const { id, no, nama_buku, gambar_buku, stok } = data;
+  const baseUpdate = {
+    nama_buku: nama_buku,
+    gambar_buku: gambar_buku,
+    stok: stok,
+  };
+
 
   const [modalPinjamTrigger, setModalPinjamTrigger] = useState(false);
-
+  const [modalInfoTrigger, setModalInfoTrigger] = useState(false);
+  const [update, setUpdate] = useState(baseUpdate);
 
 const handleModalPinjamTrigger = () => {
   setModalPinjamTrigger(!modalPinjamTrigger);
 };
-
+const handleModalInfoTrigger = () => {
+  setModalInfoTrigger(!modalInfoTrigger);
+};
 
   return (
     <tbody>
@@ -31,10 +42,24 @@ const handleModalPinjamTrigger = () => {
         <th scope="row" className="whitespace-nowrap py-4 px-6 font-semibold text-gray-900">
           {nama_buku}
         </th>
+        <th scope="row" className="whitespace-nowrap py-4 px-6 font-semibold text-gray-900">
+          {stok}
+        </th>
+        <th scope="row" className="whitespace-nowrap py-4 px-6 font-semibold text-gray-900">
+        <button type="button" className="font-medium text-blue-600 hover:underline" onClick={handleModalInfoTrigger}>
+        <InformationCircleIcon className="h-6 w-6 text-blue-600 transition duration-75 hover:text-blue-700" />
+        </button>
+        </th>
         <td className="py-4 px-6">
         <div className="flex items-center space-x-4 text-sm">
             <div onClick={handleModalPinjamTrigger}><Button>Pinjam</Button></div>
           </div>
+          {modalInfoTrigger && (
+            <ModalInfoBuku
+              handleModalInfoTrigger={handleModalInfoTrigger}
+              update={update}
+            />
+          )}
           {modalPinjamTrigger && (
             <ModalPinjamBuku
             handleModalPinjamTrigger={handleModalPinjamTrigger}

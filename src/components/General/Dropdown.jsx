@@ -1,12 +1,12 @@
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import Swal from "sweetalert2";
 import useAuth from "../../hooks/useAuth";
 import useUser from "../../hooks/useUser";
 import { PulseLoader } from "react-spinners";
 
-const Dropdown = () => {
+const Dropdown = ({ uid }) => {
 	const navigate = useNavigate();
 	const { logout } = useAuth();
 
@@ -64,7 +64,9 @@ const Dropdown = () => {
 							<PulseLoader size={5} color="#2563eb" />
 						</div>
 					)}
+					<Link to={`/${uid}/profile`}>
 					{name}
+					</Link>
 				</h4>
 				<button className="block w-full py-2 px-4 text-sm text-gray-700 hover:bg-gray-100" onClick={handleLogout}>
 					Logout

@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
 import { getMetadata, updateMetadata, getDownloadURL, ref, uploadBytes, deleteObject } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
-import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { InformationCircleIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { DeleteBuku, EditBuku } from "../../graphql/typeDefs/buku.graphql";
 import ModalDelete from "./ModalDelete";
 import Swal from "sweetalert2";
 import ModalEditBuku from "./ModalEditBuku";
 import { storage } from "../../configs/firebase";
+import ModalInfoBuku from "./ModalInfoBuku";
 
 const BukuListItem = ({ data }) => {
   const { id, no, nama_buku, gambar_buku, stok } = data;
@@ -20,6 +21,7 @@ const BukuListItem = ({ data }) => {
 
   const [modalEditTrigger, setModalEditTrigger] = useState(false);
   const [modalDeleteTrigger, setModalDeleteTrigger] = useState(false);
+  const [modalInfoTrigger, setModalInfoTrigger] = useState(false);
   const [update, setUpdate] = useState(baseUpdate);
   const [updateBuku] = useMutation(EditBuku, {
     onError: () => {
@@ -146,6 +148,9 @@ const BukuListItem = ({ data }) => {
     setModalDeleteTrigger(!modalDeleteTrigger);
   };
 
+  const handleModalInfoTrigger = () => {
+    setModalInfoTrigger(!modalInfoTrigger);
+  };
   const handleImage = (e) => {
     const imageUpload = e.target.files[0];
     setUpdate({ ...update, gambar_buku: imageUpload });
@@ -172,6 +177,11 @@ const BukuListItem = ({ data }) => {
         <th scope="row" className="whitespace-nowrap py-4 px-6 font-semibold text-gray-900">
           {nama_buku}
         </th>
+        <th scope="row" className="whitespace-nowrap py-4 px-6 font-semibold text-gray-900">
+        <button type="button" className="font-medium text-blue-600 hover:underline" onClick={handleModalInfoTrigger}>
+        <InformationCircleIcon className="h-6 w-6 text-blue-600 transition duration-75 hover:text-blue-700" />
+        </button>
+        </th>
         <td className="py-4 px-6">
           <div className="flex items-center space-x-4 text-sm">
             <button type="button" className="font-medium text-blue-600 hover:underline" onClick={handleModalEditTrigger}>
@@ -181,6 +191,14 @@ const BukuListItem = ({ data }) => {
               <TrashIcon className="h-6 w-6 text-red-400 transition duration-75 hover:text-red-500" />
             </button>
           </div>
+          {modalInfoTrigger && (
+            <ModalInfoBuku
+              handleModalInfoTrigger={handleModalInfoTrigger}
+              update={update}
+              handleUpdate={handleUpdate}
+              handleChange={handleChange}
+            />
+          )}
           {modalEditTrigger && (
             <ModalEditBuku
               handleModalEditTrigger={handleModalEditTrigger}

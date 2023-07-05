@@ -2,7 +2,7 @@ import React from "react";
 
 import { InformationCircleIcon, TrashIcon, XCircleIcon } from "@heroicons/react/24/outline";
 
-const ModalDelete = ({ handleModalDeleteTrigger, handleDeleteSiswa, handleDeleteBuku, handleDeleteGuru, guru, buku, siswa }) => {
+const ModalDelete = ({ handleModalDeleteTrigger, handleDeleteSiswa, handleDeleteBuku, handleDeleteKategori, handleDeletePeminjaman, handleDeletePengembalian,  peminjaman, pengembalian, buku, kategori, siswa }) => {
 	return (
 		<div className="relative z-50">
 			<div className="fixed inset-0 z-50 bg-gray-400 bg-opacity-50 transition-opacity"></div>
@@ -23,7 +23,6 @@ const ModalDelete = ({ handleModalDeleteTrigger, handleDeleteSiswa, handleDelete
 											<TrashIcon className="mr-2 h-4 w-4" /> <span>Hapus</span>
 										</button>
 									)}
-
 									{buku && (
 										<button
 											data-modal-toggle="popup-modal"
@@ -33,17 +32,33 @@ const ModalDelete = ({ handleModalDeleteTrigger, handleDeleteSiswa, handleDelete
 											<TrashIcon className="mr-2 h-4 w-4" /> <span>Hapus</span>
 										</button>
 									)}
-
-									{guru && (
+									{kategori && (
 										<button
 											data-modal-toggle="popup-modal"
 											type="button"
 											className="mr-2 inline-flex items-center justify-center rounded-lg bg-red-100 px-5 py-2.5 text-center text-sm font-medium text-red-700 hover:bg-red-200 focus:outline-none focus:ring-4 focus:ring-red-300"
-											onClick={handleDeleteGuru}>
+											onClick={handleDeleteKategori}>
 											<TrashIcon className="mr-2 h-4 w-4" /> <span>Hapus</span>
 										</button>
 									)}
-
+									{peminjaman && (
+										<button
+											data-modal-toggle="popup-modal"
+											type="button"
+											className="mr-2 inline-flex items-center justify-center rounded-lg bg-red-100 px-5 py-2.5 text-center text-sm font-medium text-red-700 hover:bg-red-200 focus:outline-none focus:ring-4 focus:ring-red-300"
+											onClick={handleDeletePeminjaman}>
+											<TrashIcon className="mr-2 h-4 w-4" /> <span>Hapus</span>
+										</button>
+									)}
+									{pengembalian && (
+										<button
+											data-modal-toggle="popup-modal"
+											type="button"
+											className="mr-2 inline-flex items-center justify-center rounded-lg bg-red-100 px-5 py-2.5 text-center text-sm font-medium text-red-700 hover:bg-red-200 focus:outline-none focus:ring-4 focus:ring-red-300"
+											onClick={handleDeletePengembalian}>
+											<TrashIcon className="mr-2 h-4 w-4" /> <span>Hapus</span>
+										</button>
+									)}
 									<button
 										data-modal-toggle="popup-modal"
 										type="button"

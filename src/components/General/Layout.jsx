@@ -11,7 +11,7 @@ const Layout = ({uid}) => {
 				<Sidebar uid={uid}/>
 				<Drawer uid={uid}/>
 				<div className="flex w-full flex-1 flex-col">
-					<Header />
+					<Header uid={uid}/>
 					<div className="pl-0 pt-16 md:pl-64 lg:pl-64">
 						<Outlet />
 					</div>

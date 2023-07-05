@@ -20,12 +20,17 @@ export default function useUser() {
       try {
         const q = query(collection(db, "users"), where("uid", "==", user?.uid));
         const doc = await getDocs(q);
-        const data = doc.docs[0].data();
-        setRole(data.role);
-        setName(data.name);
-        setUid(data.uid)
-        setLoadingData(false);
-      } catch (err) {
+        if (doc.docs.length > 0) {
+          const data = doc.docs[0].data();
+          setRole(data.role);
+          setName(data.name);
+          setUid(data.uid);
+          setLoadingData(false);
+        } else {
+          // Tidak ada dokumen yang sesuai ditemukan
+          console.log("No matching document found");
+        } }
+      catch (err) {
         console.error(err);
         alert("An error occured while fetching user data");
       }

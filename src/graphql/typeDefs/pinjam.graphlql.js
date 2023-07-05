@@ -59,6 +59,11 @@ export const SubcriptionPinjam = gql`
         status
         tanggal_peminjaman
         tanggal_pengembalian
+        peminjaman_buku {
+          nama_buku
+          gambar_buku
+          stok
+        }
       }
     }
   }
@@ -73,7 +78,7 @@ export const SubcriptionPinjamId = gql`
     peminjaman_aggregate(
       where: {
         id_users: { _eq: $id_users }
-        nama_buku: { _ilike: $searchTerm }
+        peminjaman_buku: { nama_buku: { _ilike: $searchTerm } }
       }
       order_by: { tanggal_peminjaman: asc }
       offset: $offset
@@ -83,6 +88,7 @@ export const SubcriptionPinjamId = gql`
         count
       }
       nodes {
+        id
         id_buku
         id_users
         jumlah_pinjam
@@ -91,6 +97,10 @@ export const SubcriptionPinjamId = gql`
         status
         tanggal_peminjaman
         tanggal_pengembalian
+        peminjaman_buku {
+          nama_buku
+          gambar_buku
+        }
       }
     }
   }
@@ -106,9 +116,51 @@ export const TotalPeminjaman = gql `subscription TotalPeminjaman {
     }
   }
   `
+
+export const TotalPeminjamanUser = gql `subscription TotalPeminjamanUser($id_users: String!) {
+  peminjaman_aggregate(where: { id_users: { _eq: $id_users } }) {
+    aggregate {
+      count
+    }
+  }
+}
+`
 export const EditStatusPinjam = gql `mutation EditStatusPinjam($id: uuid!, $status: String!) {
     update_peminjaman_by_pk(pk_columns: {id: $id}, _set: {status: $status}) {
+      id
       status
+    }
+  }
+  `
+export const DeletePeminjaman = gql `
+  mutation DeletePeminjaman($id: uuid!) {
+    delete_peminjaman_by_pk(id: $id) {
+      id
+      id_buku
+      id_users
+      jumlah_pinjam
+      nama_buku
+      nama_user
+    }
+  }
+  `
+
+  export const DeletedPeminjaman = gql `mutation DeletePeminjaman($id: uuid!) {
+    delete_peminjaman_by_pk(id: $id) {
+      id
+      id_buku
+      id_users
+      jumlah_pinjam
+      nama_buku
+      nama_user
+    }
+    
+    update_buku_by_pk(
+      pk_columns: { id: $id_buku }
+      _set: { stok: { _inc: $jumlah_pinjam } }
+    ) {
+      id
+      stok
     }
   }
   `

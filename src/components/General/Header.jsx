@@ -9,14 +9,13 @@ import Dropdown from "./Dropdown";
 import { sidebarToggler } from "../../stores/features/sidebarSlice";
 import { Avatar } from "flowbite-react";
 
-const Header = () => {
+const Header = ({ uid }) => {
 	const [dropdownTrigger, setdropdownTrigger] = useState(false);
 	const dispatch = useDispatch();
 
 	const handledropdownTrigger = () => {
 		setdropdownTrigger(!dropdownTrigger);
 	};
-
 
 	return (
 		<header className="fixed top-0 left-0 flex h-16 w-full items-center justify-between border-b border-gray-200 bg-white px-4 py-2 md:px-8">
@@ -41,7 +40,7 @@ const Header = () => {
 							<Avatar rounded={true}/> 
 						</span>
 					</button>
-					{dropdownTrigger && <Dropdown />}
+					{dropdownTrigger && <Dropdown uid={uid}/>}
 				</div>
 			</div>
 		</header>

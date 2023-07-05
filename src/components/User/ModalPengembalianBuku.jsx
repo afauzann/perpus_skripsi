@@ -5,131 +5,104 @@ import moment from "moment";
 import { PulseLoader } from "react-spinners";
 import Cookies from "js-cookie";
 import { useMutation } from "@apollo/client";
-import { AddPinjam } from "../../graphql/typeDefs/pinjam.graphlql";
+import { AddPinjam, EditStatusPinjam } from "../../graphql/typeDefs/pinjam.graphlql";
 import { EditStokBuku } from "../../graphql/typeDefs/buku.graphql";
 import Swal from "sweetalert2";
+import { AddPengembalian } from "../../graphql/typeDefs/pengembalian.graphql";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsKembali } from "../../stores/features/peminjamanSlice";
 
+const ModalPengembalianBuku = ({
+  handleModalKembaliTrigger,
+  setIsKembali,
+  isKembali,
+  namaBuku,
+  denda,
+  stok,
+  id,
+  id_buku,
+  tanggal_pengembalian,
+  tanggal_peminjaman,
+  jumlah_pinjam,
+}) => {
+  const dispatch = useDispatch();
+  const today = moment().format("YYYY-MM-DD");
+  const { name, loadingData } = useUser();
+  const [editBuku] = useMutation(EditStokBuku);
+  const [editPinjam] = useMutation(EditStatusPinjam)
+  const [addPengembalian, { loading }] = useMutation(AddPengembalian, {
+    onCompleted: () => {
+      Swal.fire({
+        title: "Peminjaman Berhasil",
+        icon: "success",
+      });
+      handleModalKembaliTrigger();
+    },
+    onError: (error) => {
+      Swal.fire({
+        title: "Peminjaman Gagal",
+        text: error.message,
+        icon: "error",
+      });
+    },
+  });
 
-const ModalPengembalianBuku = ({ handleModalKembaliTrigger, namaBuku, denda, stok, id, tanggal_pengembalian, tanggal_peminjaman }) => {
-    const today = moment().format("YYYY-MM-DD");
-    const { name, loadingData } = useUser();
-    const [tanggalPinjam, setTanggalPinjam] = useState(today);
-    const [tanggalPengembalian, setTanggalPengembalian] = useState("");
-    const [jumlahPinjam, setJumlahPinjam] = useState(1);
-    const [editBuku] = useMutation(EditStokBuku);
-  
-    const [addPinjam, { loading }] = useMutation(AddPinjam, {
-      onCompleted: () => {
-        Swal.fire({
-          title: "Peminjaman Berhasil",
-          icon: "success",
-        });
-        handleModalKembaliTrigger();
-      },
-      onError: (error) => {
-        Swal.fire({
-          title: "Peminjaman Gagal",
-          text: error.message,
-          icon: "error",
-        });
-      },
-    });
-  
-    const handleTanggalPinjamChange = (e) => {
-      const tanggal = e.target.value;
-      setTanggalPinjam(tanggal);
-  
-      // Mengatur tanggal pengembalian dengan batasan maksimal 30 hari dari tanggal peminjaman
-      const tanggalPengembalian = moment(tanggal).add(30, "days").format("YYYY-MM-DD");
-      setTanggalPengembalian(tanggalPengembalian);
-    };
-  
-    const handlePeminjaman = (durasi) => {
-      const tanggalPengembalian = moment(tanggalPinjam)
-        .add(durasi, "days")
-        .format("YYYY-MM-DD");
-        setTanggalPengembalian(tanggalPengembalian);
-    };
-  
-    const handlePinjam = async (e) => {
-        e.preventDefault();
-      
-        if (!tanggalPengembalian) {
-            Swal.fire({
-              title: "Tanggal Pengembalian Tidak Valid",
-              text: "Tanggal pengembalian harus diisi.",
-              icon: "error",
-            });
-            return;
-          }
-          
-        if (jumlahPinjam > stok) {
-          Swal.fire({
-            title: "Jumlah Pinjam Tidak Valid",
-            text: "Jumlah pinjam melebihi stok buku yang tersedia.",
-            icon: "error",
-          });
-          return;
+  const handlePinjam = async (e) => {
+    e.preventDefault();
+
+    try {
+      await addPengembalian({
+        variables: {
+          id_buku: id_buku,
+          id_peminjaman: id,
+          id_users: Cookies.get("uid"),
+          jumlah_pinjam: jumlah_pinjam,
+          tanggal_pengembalian: today,
+          denda: denda,
+        },
+      });
+
+      const updatedStok = stok + jumlah_pinjam;
+
+      await editBuku({
+        variables: {
+          id: id_buku,
+          stok: updatedStok,
+        },
+      });
+
+      await editPinjam({
+        variables: {
+          id: id,
+          status: "dikembalikan",
         }
-      
-        if (jumlahPinjam <= 0) {
-          Swal.fire({
-            title: "Jumlah Pinjam Tidak Valid",
-            text: "Jumlah pinjam harus lebih dari 0.",
-            icon: "error",
-          });
-          return;
-        }
-      
-        try {
-          await addPinjam({
-            variables: {
-              id_buku: id,
-              id_users: Cookies.get("uid"),
-              jumlah_pinjam: parseFloat(jumlahPinjam),
-              denda: denda,
-              nama_buku: namaBuku,
-              nama_user: name,
-              tanggal_peminjaman: tanggalPinjam,
-              tanggal_pengembalian: tanggalPengembalian,
-            },
-          });
-      
-          const updatedStok = stok - jumlahPinjam;
-      
-          await editBuku({
-            variables: {
-              id: id,
-              stok: updatedStok,
-            },
-          });
-      
-          Swal.fire({
-            title: "Peminjaman Berhasil",
-            icon: "success",
-          });
-          handleModalKembaliTrigger();
-        } catch (error) {
-          Swal.fire({
-            title: "Peminjaman Gagal",
-            text: error.message,
-            icon: "error",
-          });
-        }
-      };
-      
-    const handleJumlahPinjamChange = (e) => {
-      const jumlah = parseInt(e.target.value);
-      setJumlahPinjam(jumlah);
-    };
-    
+      })
+      Swal.fire({
+        title: "Peminjaman Berhasil",
+        icon: "success",
+      });
+      handleModalKembaliTrigger();
+      // setIsKembali(true);
+      dispatch(setIsKembali({ id, value: false }));
+    } catch (error) {
+      Swal.fire({
+        title: "Peminjaman Gagal",
+        text: error.message,
+        icon: "error",
+      });
+    }
+  };
+
   return (
     <div className="relative z-50">
       <div className="fixed inset-0 z-50 bg-gray-400 bg-opacity-50 transition-opacity"></div>
       <div className="fixed inset-0 z-50 items-center justify-center overflow-y-auto">
         <div className="flex w-full items-end justify-center px-4 py-20 sm:h-full sm:items-center sm:p-0 md:h-screen">
           <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl">
-            <form onSubmit={handlePinjam} className="rounded-lg bg-white shadow">
+            <form
+              onSubmit={handlePinjam}
+              className="rounded-lg bg-white shadow"
+            >
               <div className="flex items-center justify-between rounded-t border-b p-4 dark:border-gray-600">
                 <h3 className="p-1.5 text-base font-semibold text-gray-900 dark:text-white lg:text-lg xl:text-xl">
                   Pengembalian Buku
@@ -143,7 +116,7 @@ const ModalPengembalianBuku = ({ handleModalKembaliTrigger, namaBuku, denda, sto
                 </button>
               </div>
               <div className="space-y-6 p-6">
-                <div  className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label
                       htmlFor="nama_buku"
@@ -203,9 +176,6 @@ const ModalPengembalianBuku = ({ handleModalKembaliTrigger, namaBuku, denda, sto
                       id="tanggal_pinjam"
                       className="block w-full rounded-lg border border-gray-300 p-2.5 text-gray-900 placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                       value={tanggal_peminjaman}
-                      min={today}
-                      max={today}
-                      onChange={handleTanggalPinjamChange}
                       readOnly
                     />
                   </div>
@@ -262,7 +232,7 @@ const ModalPengembalianBuku = ({ handleModalKembaliTrigger, namaBuku, denda, sto
                       id="jumlah_pinjam"
                       className="block w-full rounded-lg border border-gray-300 p-2.5 text-gray-900 placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                       placeholder="Masukkan jumlah buku yang ingin dipinjam"
-                      value={jumlahPinjam}
+                      value={jumlah_pinjam}
                       readOnly
                     />
                   </div>
@@ -288,25 +258,26 @@ const ModalPengembalianBuku = ({ handleModalKembaliTrigger, namaBuku, denda, sto
                 </div>
               </div>
               <div className="flex items-center justify-center space-x-2 rounded-b border-t border-gray-200 p-6">
-              {loading ? ( <button
-                  type="submit"
-                  className="rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300"
-                  onClick={handlePinjam}
-                >
-                  <PulseLoader size={7} color={"#ffffff"} />
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  className="rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300"
-                  onClick={handlePinjam}
-                >
-                  Kembalikan
-                </button>
-              )}
+                {loading ? (
+                  <button
+                    type="submit"
+                    className="rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300"
+                    onClick={handlePinjam}
+                  >
+                    <PulseLoader size={7} color={"#ffffff"} />
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    className="rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300"
+                    onClick={handlePinjam}
+                  >
+                    Kembalikan
+                  </button>
+                )}
                 <button
                   type="button"
-                  className="rounded-lg bg-gray-300 px-5 py-2.5 text-center text-sm font-medium text-gray-800 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-200"
+                  className="rounded-lg bg-gray-300 px-5 py-2.5 text-center text-sm font-medium text-gray-900 hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-200"
                   onClick={handleModalKembaliTrigger}
                 >
                   Batal

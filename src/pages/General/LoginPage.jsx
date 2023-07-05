@@ -171,6 +171,13 @@ const LoginPage = () => {
             >
               Daftar
             </Link>
+           <br/>
+            <Link
+              to="/lupa-password"
+              className="ml-1 font-medium text-indigo-600 hover:underline"
+              >
+              Lupa Password?
+            </Link>
           </p>
         </form>
       </div>
