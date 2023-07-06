@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, NavLink, useParams } from "react-router-dom";
 import { PulseLoader } from "react-spinners";
+import icon from "../../assets/logo_attahir.png";
 import useUser from "../../hooks/useUser";
 import { isAuthorizedAdmin, isAuthorizedPustakawan, isAuthorizedSiswa } from "../../mocks/isAuthorized";
 
@@ -20,6 +21,7 @@ const Sidebar = ({ uid }) => {
           to="/dashboard"
           className="mb-5 flex cursor-pointer items-center pl-2.5"
         >
+          <img src={icon} className="mr-3 ml-2 h-6 w-6 sm:h-7" alt="logo" />
           <span className="self-center whitespace-nowrap text-xl font-semibold text-blue-600">
             Perpus
           </span>
